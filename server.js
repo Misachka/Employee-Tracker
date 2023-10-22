@@ -45,7 +45,7 @@ const userPrompts = () => {
             },
         ])
 
-        //A different function will be executed according to the user's choice
+        //different functions for database
         .then((res) => {
             const choice = res.options;
             switch (choice) {
@@ -95,3 +95,61 @@ const userPrompts = () => {
             }
         });
 };
+
+//Select all the department 
+const viewAllDepartments = () => {
+    let query = `SELECT * FROM department`;
+    db.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        userPrompts();
+    });
+};
+
+//Select all roles
+const viewAllRoles = () => {
+    let query =
+        `SELECT role.id, role.title, department.name AS department
+    FROM role
+    INNER JOIN department ON role.department_id = department.id`;
+
+    db.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        userPrompts();
+    });
+};
+
+//picks employees info and adds their manager
+const viewAllEmployees = () => {
+    const query =
+        `SELECT employee.id, 
+    employee.first_name, 
+    employee.last_name, 
+    role.title, 
+    department.name AS department,
+    role.salary, 
+    CONCAT (manager.first_name, " ", manager.last_name) AS manager
+    FROM employee
+    LEFT JOIN role ON employee.role_id = role.id
+    LEFT JOIN department ON role.department_id = department.id
+    LEFT JOIN employee manager ON employee.manager_id = manager.id`;
+
+    db.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        userPrompts();
+    });
+
+};
+
+// view employees by manager
+const viewEmployeesByManager = () => {
+    const query = 'SELECT * FROM employee ORDER BY manager_id DESC';
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+    })
+
+    printMenuPrompts();
+}
