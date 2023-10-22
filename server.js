@@ -369,3 +369,119 @@ const UpdateEmployeeRole = () => {
             });
     });
 };
+
+
+
+//combines 2 databases  and shows employees by department
+const viewEmployeesByDepartment = () => {
+    let query =
+        `SELECT employee.first_name, 
+    employee.last_name, 
+    department.name AS department
+    FROM employee 
+    LEFT JOIN role ON employee.role_id = role.id 
+    LEFT JOIN department ON role.department_id = department.id`;
+
+    db.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        userPrompts();
+    });
+};
+
+
+//Data is retrieved and combined from tables in the following functions to execute the user's choices
+
+const deleteDepartment = () => {
+    const getDepartment = `SELECT * FROM department`;
+
+    db.query(getDepartment, (err, data) => {
+        if (err) throw err;
+
+        const dept = data.map(({ name, id }) => ({ name: name, value: id }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'dept',
+                message: 'What department do you want to delete?',
+                choices: dept,
+            },
+        ])
+            .then((res) => {
+                const chosenDept = res.dept;
+                let query = `DELETE FROM department WHERE id = ?`;
+
+                db.query(query, chosenDept, (err, result) => {
+                    if (err) throw err;
+                    console.log(`${chosenDept.name} has been deleted!`);
+
+                    viewAllDepartments();
+                });
+            });
+    });
+
+};
+
+const deleteRole = () => {
+    const getRole = `SELECT * FROM role`;
+
+    db.query(getRole, (err, data) => {
+        if (err) throw err;
+
+        const roles = data.map(({ title, id }) => ({ name: title, value: id }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'role',
+                message: 'What role do you want to delete?',
+                choices: roles,
+            },
+        ])
+            .then((res) => {
+                const chosenRole = res.role;
+                let query = `DELETE FROM role WHERE id =?`;
+
+                db.query(query, chosenRole, (err, result) => {
+                    if (err) throw err;
+                    console.log(`${chosenRole} has been deleted!`);
+                    viewAllRoles();
+                });
+
+            });
+    });
+
+};
+
+const deleteEmployee = () => {
+    const getEmployee = `SELECT * FROM employee`;
+
+    db.query(getEmployee, (err, data) => {
+        if (err) throw err;
+
+        const employees = data.map(({ id, first_name, last_name }) => ({ name: first_name + ' ' + last_name, value: id }));
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'name',
+                message: 'Which employee would like to delete?',
+                choices: employees,
+            },
+        ])
+            .then((res) => {
+                const chosenEmployee = res.name;
+
+                let query = `DELETE FROM employee WHERE id = ?`;
+
+                db.query(query, chosenEmployee, (err, result) => {
+                    if (err) throw err;
+                    console.log(`${chosenEmployee} has been deleted!`);
+                    viewAllEmployees();
+                });
+            });
+
+    });
+};
+
