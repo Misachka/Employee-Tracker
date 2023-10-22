@@ -10,8 +10,25 @@ const db = mysql.createConnection(
         password: process.env.DB_PASSWORD,
         database: 'employees_db'
     },
-    console.log(`Connected to employees_db`)
 );
+
+connection.connect(err => {
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    afterConnection();
+  });
+  
+  // function after connection is established and welcome image shows 
+  afterConnection = () => {
+    console.log("***********************************")
+    console.log("*                                 *")
+    console.log("*        EMPLOYEE MANAGER         *")
+    console.log("*                                 *")
+    console.log("***********************************")
+    promptUser();
+  };
+
+  
 db.connect((err) => {
     if (err) throw err;
     userPrompts();
@@ -485,3 +502,27 @@ const deleteEmployee = () => {
     });
 };
 
+
+const viewDepartmentBudgets = () => {
+    let query =
+        `SELECT department_id AS id, 
+    department.name AS department,
+    SUM(salary) AS budget
+    FROM  role  
+    JOIN department ON role.department_id = department.id GROUP BY  department_id`;
+
+    db.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        userPrompts();
+    });
+
+};
+
+const noAction = () => {
+    if ('No action') {
+        console.log('bye!');
+        process.exit();
+    };
+
+};
