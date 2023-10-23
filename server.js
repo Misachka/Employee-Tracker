@@ -10,14 +10,17 @@ const db = mysql.createConnection(
         password: process.env.DB_PASSWORD,
         database: 'employees_db'
     },
-    console.log(`Connected to employees_db`)
+    console.log(`***********************************
+*                                 *
+*        EMPLOYEE MANAGER         *
+*                                 *
+***********************************`)
 );
 db.connect((err) => {
     if (err) throw err;
     userPrompts();
 });
 
-  
 
 //user prompts
 const userPrompts = () => {
