@@ -12,12 +12,11 @@ const db = mysql.createConnection(
     },
     console.log(`Connected to employees_db`)
 );
-
-
 db.connect((err) => {
     if (err) throw err;
     userPrompts();
 });
+
   
 
 //user prompts
