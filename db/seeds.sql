@@ -44,4 +44,4 @@ VALUES ('Meadow', 'Kelleher', 1, 1),
 ('Bernard', 'Resende', 8, 4),
 ('Jaiden', 'Singh', 9, 3),
 ('Cesar', 'Tyree', 9, 4),
-('Maximus', 'Helms', 10, 3),
+('Maximus', 'Helms', 10, 3);
