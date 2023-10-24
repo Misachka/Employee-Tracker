@@ -34,7 +34,7 @@ source db/seeds.sql
 
 ## Video Guide
 
-
+(https://drive.google.com/file/d/1bWAadOqB1N9M7RAK9sBEPHPGOnsLlb-L/view)
 
 ## License
 
